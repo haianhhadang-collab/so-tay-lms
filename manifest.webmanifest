@@ -1,0 +1,12 @@
+{
+  "name": "Sổ tay LMS cho giảng viên",
+  "short_name": "Sổ tay LMS",
+  "description": "Hướng dẫn thao tác LMS VNU cho giảng viên: từng bước có ảnh, sự cố thường gặp, hỏi đáp.",
+  "lang": "vi",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f5f7fb",
+  "theme_color": "#1e3a78",
+  "icons": [{ "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }]
+}

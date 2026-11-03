@@ -1,0 +1,439 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Sổ tay LMS cho giảng viên</title>
+<meta name="description" content="Hướng dẫn thao tác LMS VNU cho giảng viên: từng bước có ảnh minh hoạ, sự cố thường gặp, hỏi đáp.">
+<meta name="theme-color" content="#1e3a78">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>/* Bố cục: thanh mục lục dính bên trái (máy tính) / trên cùng (điện thoại), cột chữ ~68 ký tự; nút LMS hiện như "chip" giống giao diện thật */
+:root{
+  --bg:#f5f7fb; --surface:#ffffff; --ink:#18223a; --muted:#56627a; --line:#dbe2ee;
+  --navy:#1e3a78; --lms:#2f86d6; --lms-soft:#e6f1fb; --warn:#b4231f; --warn-soft:#fdeceb;
+  --ok:#1f7a4d; --ok-soft:#e5f4ec; --note:#8a5a00; --note-soft:#fff4dd;
+  --f-body:"Be Vietnam Pro",system-ui,-apple-system,"Segoe UI",Arial,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0f1524; --surface:#172034; --ink:#e7ecf6; --muted:#9aa7c0; --line:#2a3550;
+  --navy:#9fbcf5; --lms:#5aa8ee; --lms-soft:#16304d; --warn:#ff8a84; --warn-soft:#3a1d1f;
+  --ok:#6fd3a0; --ok-soft:#15322a; --note:#f2c26b; --note-soft:#35290f; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f1524; --surface:#172034; --ink:#e7ecf6; --muted:#9aa7c0; --line:#2a3550;
+  --navy:#9fbcf5; --lms:#5aa8ee; --lms-soft:#16304d; --warn:#ff8a84; --warn-soft:#3a1d1f;
+  --ok:#6fd3a0; --ok-soft:#15322a; --note:#f2c26b; --note-soft:#35290f; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:400 16px/1.65 var(--f-body);
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:1120px;margin:0 auto;display:grid;grid-template-columns:240px minmax(0,1fr);gap:40px;padding-block:32px 64px}
+header.top{grid-column:1/-1;border-bottom:2px solid var(--navy);padding-bottom:20px;display:grid;gap:8px}
+.eyebrow{font:600 12px/1 var(--f-body);letter-spacing:.12em;text-transform:uppercase;color:var(--lms)}
+h1{font-size:clamp(28px,4.4vw,42px);line-height:1.15;font-weight:800;margin:0;color:var(--navy);text-wrap:balance}
+.lead{margin:0;color:var(--muted);max-width:68ch}
+.meta{display:flex;flex-wrap:wrap;gap:8px 18px;font-size:13px;color:var(--muted)}
+nav.toc{position:sticky;top:calc(16px + env(safe-area-inset-top,0px));align-self:start;font-size:14px}
+nav.toc p{font-weight:700;margin:0 0 8px;color:var(--navy)}
+nav.toc ol{list-style:none;margin:0;padding:0;display:grid;gap:2px;counter-reset:m}
+nav.toc a{display:block;padding:5px 10px;border-radius:6px;color:var(--ink);text-decoration:none}
+nav.toc a:hover,nav.toc a:focus-visible{background:var(--lms-soft);outline:none}
+main{min-width:0;display:grid;gap:56px}
+section{display:grid;gap:16px;scroll-margin-top:16px}
+h2{font-size:24px;line-height:1.25;margin:0;color:var(--navy);text-wrap:balance;display:flex;gap:12px;align-items:baseline}
+h2 .n{font:500 14px var(--f-mono);color:var(--lms);flex:none}
+h3{font-size:18px;margin:8px 0 0;text-wrap:balance}
+p,li{max-width:68ch}
+p{margin:0}
+ol,ul{margin:0;padding-left:22px;display:grid;gap:6px}
+a{color:var(--lms)}
+.ui{font:500 .86em/1.2 var(--f-mono);background:var(--lms-soft);color:var(--ink);border:1px solid var(--line);
+  border-radius:5px;padding:1px 6px;white-space:nowrap}
+.path{font:500 13.5px/1.6 var(--f-mono);background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--lms);
+  border-radius:6px;padding:8px 12px;overflow-x:auto;white-space:nowrap}
+.src{font-size:13px;color:var(--muted)}
+.tag{display:inline-block;font-size:11.5px;font-weight:600;letter-spacing:.04em;border-radius:999px;padding:2px 9px;vertical-align:2px}
+.tag.ok{background:var(--ok-soft);color:var(--ok)}
+.tag.vid{background:var(--lms-soft);color:var(--lms)}
+.tag.chua{background:var(--note-soft);color:var(--note)}
+.callout{border-radius:8px;padding:12px 16px;display:grid;gap:6px}
+.callout.warn{background:var(--warn-soft);border:1px solid color-mix(in srgb,var(--warn) 35%,transparent)}
+.callout.warn strong{color:var(--warn)}
+.callout.note{background:var(--note-soft)}
+.top5{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}
+.top5 a{display:grid;gap:4px;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:14px;
+  text-decoration:none;color:var(--ink)}
+.top5 a:hover,.top5 a:focus-visible{border-color:var(--lms);outline:none}
+.top5 b{color:var(--navy)}
+.top5 span{font-size:14px;color:var(--muted)}
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:8px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:14.5px;min-width:560px}
+th,td{text-align:left;vertical-align:top;padding:9px 12px;border-bottom:1px solid var(--line)}
+th{background:var(--lms-soft);color:var(--navy);font-weight:600}
+tr:last-child td{border-bottom:0}
+.issue{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px 18px;display:grid;gap:10px}
+.issue h3{margin:0}
+.issue dl{margin:0;display:grid;grid-template-columns:110px minmax(0,1fr);gap:6px 14px}
+.issue dt{font-weight:600;color:var(--muted);font-size:14px}
+.issue dd{margin:0}
+figure{margin:0;display:grid;gap:6px}
+figure img{border:1px solid var(--line);border-radius:8px;display:block;max-width:100%;height:auto}
+figcaption{font-size:13.5px;color:var(--muted)}
+.figs{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
+details{background:var(--surface);border:1px solid var(--line);border-radius:8px}
+details>summary{cursor:pointer;padding:12px 16px;font-weight:600;list-style:none;display:flex;gap:10px}
+details>summary::before{content:"+";font:600 16px var(--f-mono);color:var(--lms);width:12px;flex:none}
+details[open]>summary::before{content:"−"}
+details>summary:focus-visible{outline:2px solid var(--lms);outline-offset:2px;border-radius:8px}
+details>div{padding:0 16px 14px 38px;display:grid;gap:8px}
+.qa{display:grid;gap:8px}
+.qa h3{margin-top:12px;font-size:15px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+footer{grid-column:1/-1;border-top:1px solid var(--line);padding-top:16px;font-size:13px;color:var(--muted)}
+@media (max-width:860px){
+  .wrap{grid-template-columns:minmax(0,1fr);gap:28px}
+  nav.toc{position:static}
+  nav.toc ol{grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+  .issue dl{grid-template-columns:minmax(0,1fr)}
+  .issue dt{margin-top:4px}
+}
+@media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+
+/* Web app: tìm kiếm, phóng to ảnh, lên đầu trang */
+html,body{margin:0}
+.an{display:none!important}
+.tim{display:grid;gap:6px;margin-top:6px;max-width:640px}
+.tim-nhan{font-size:13px;font-weight:600;color:var(--muted)}
+.tim-o{position:relative}
+.tim-o input{width:100%;font:500 16px var(--f-body);padding:11px 40px 11px 14px;border:1.5px solid var(--line);border-radius:10px;
+  background:var(--surface);color:var(--ink)}
+.tim-o input:focus{outline:none;border-color:var(--lms);box-shadow:0 0 0 3px var(--lms-soft)}
+#tim-xoa{position:absolute;right:6px;top:50%;transform:translateY(-50%);border:0;background:transparent;color:var(--muted);
+  font-size:22px;line-height:1;width:32px;height:32px;border-radius:8px;cursor:pointer}
+#tim-xoa:focus-visible{outline:2px solid var(--lms)}
+.tim-kq{font-size:13px;color:var(--muted);min-height:1em}
+body.dang-tim main{gap:32px}
+figure img{cursor:zoom-in}
+dialog#phong-to{border:0;padding:0;background:transparent;max-width:min(96vw,1200px);max-height:94vh}
+dialog#phong-to::backdrop{background:rgba(8,14,28,.82)}
+dialog#phong-to img{display:block;max-width:100%;max-height:86vh;border-radius:8px;margin:0 auto;cursor:zoom-out}
+dialog#phong-to p{color:#e7ecf6;font-size:14px;text-align:center;margin:10px 0 0}
+#len-dau{position:fixed;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));
+  border:1px solid var(--line);background:var(--surface);color:var(--navy);border-radius:999px;padding:9px 14px;
+  font:600 14px var(--f-body);box-shadow:0 4px 16px rgba(10,20,40,.15);cursor:pointer}
+#len-dau:focus-visible{outline:2px solid var(--lms);outline-offset:2px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="top">
+  <span class="eyebrow">Haidv lms</span>
+  <h1>Sổ tay LMS</h1>
+  <p class="lead">Sổ tay này giúp các Thầy, Cô thao tác thuận tiện hơi với giao diện của hệ thống LMS VNU</p>
+  <div class="meta"><span>Cập nhật 3/11/2026</span><span><span class="tag ok">đã kiểm tra trên lớp thật</span> <span class="tag vid">theo video hướng dẫn</span> <span class="tag chua">chưa chắc</span></span></div>
+  <div class="tim" role="search">
+    <label for="tim" class="tim-nhan">Tìm trong sổ tay</label>
+    <div class="tim-o"><input id="tim" type="search" placeholder="Gõ từ cần tìm, vd: nhập điểm, excel, thảo luận (phím /)" autocomplete="off" spellcheck="false">
+    <button type="button" id="tim-xoa" hidden aria-label="Xoá tìm kiếm">×</button></div>
+    <p id="tim-kq" class="tim-kq" aria-live="polite"></p>
+  </div>
+</header>
+
+<nav class="toc" aria-label="Mục lục">
+  <p>Mục lục</p>
+  <ol>
+    <li><a href="#nhanh">Vấn đề thường gặp</a></li>
+    <li><a href="#giao-dien">Vai trò giảng viên và sinh viên</a></li>
+    <li><a href="#chuan-bi">Chuẩn bị lớp</a></li>
+    <li><a href="#noi-dung">Nội dung, buổi trực tuyến</a></li>
+    <li><a href="#bai-tap">Bài tập, bài kiểm tra</a></li>
+    <li><a href="#thao-luan">Thảo luận</a></li>
+    <li><a href="#cham">Chấm bài, công bố điểm</a></li>
+    <li><a href="#diem">Hệ số, tổng hợp điểm</a></li>
+    <li><a href="#tien-do">Theo dõi sinh viên</a></li>
+    <li><a href="#su-co">Sự cố thường gặp</a></li>
+    <li><a href="#hoi-dap">Hỏi đáp</a></li>
+    <li><a href="#can-than">Các chức năng cần cẩn thận</a></li>
+    <li><a href="#ho-tro">Liên hệ hỗ trợ</a></li>
+  </ol>
+</nav>
+
+<main>
+
+<section id="nhanh">
+  <h2>Các vấn đề thường gặp</h2>
+  <div class="top5">
+    <a href="#chuan-bi"><b>Lớp không có sinh viên</b><span>HK này lớp mở ra trống, giảng viên tự thêm bằng Excel.</span></a>
+    <a href="#cham"><b>Không thấy bài sinh viên nộp</b><span>Bài tập chấm trong tab Nội dung, không phải tab Chấm điểm.</span></a>
+    <a href="#diem"><b>Điểm tổng kết “lạ”</b><span>Chỉ mục có Hệ số mới được tính, % hoàn thành không phải điểm.</span></a>
+    <a href="#tien-do"><b>Học đủ mà không tích xanh</b><span>Xem Nhật ký học tập: thời gian LMS ghi được có đủ không.</span></a>
+    <a href="#cham"><b>Nhập điểm Excel bị chặn</b><span>Tắt “Hiển thị điểm cho sinh viên” trước khi nhập.</span></a>
+    <a href="#thao-luan"><b>Lớp chưa có thảo luận</b><span>Tạo chủ đề ở tab Thảo luận, lấy số liệu ở tab Báo cáo.</span></a>
+  </div>
+</section>
+
+<section id="giao-dien">
+  <h2><span class="n">01</span>Hai giao diện và các tab của lớp</h2>
+  <p><span class="ui">Địa chỉ đăng nhập: lms.vnu.edu.vn;</span><span class="ui">ĐĂNG NHẬP VỚI TÀI KHOẢN VNU</span>: tên đăng nhập và mật khẩu là tài khoản email VNU.</p>
+  <ul>
+    <li>Nếu không thấy các chức năng quản lý lớp, các Thầy cô xem lại xem có phải đang ở vai trò sinh viên: bấm <span class="ui">Chuyển vai trò giảng viên</span> trên thanh trên cùng. Ngược lại, <span class="ui">Chuyển vai trò sinh viên</span> để xem lớp dưới giao diện của sinh viên.</li>
+    <li>Trang <span class="ui">Lớp học</span> liệt kê các lớp được phân công. Bấm <b>tên lớp</b> hoặc biểu tượng răng cưa để vào lớp.</li>
+    <li>Ứng dụng điện thoại chỉ dành cho người học; Việc quản lý lớp chỉ thực hiện trên máy tính.</li>
+  </ul>
+  <figure><img src="anh/lop-1-thong-tin.jpg" alt="Thanh tab của lớp và nút Chuyển vai trò sinh viên" loading="lazy"><figcaption>Thanh tab trong một lớp; nút Chuyển vai trò sinh viên ở góc trên để xem lớp như sinh viên.</figcaption></figure>
+  <div class="tbl"><table>
+    <thead><tr><th>Tab trong lớp</th><th>Cách dùng</th></tr></thead>
+    <tbody>
+      <tr><td><span class="ui">Thông tin</span></td><td>Ngày bắt đầu, kết thúc; công tắc <span class="ui">Trạng thái Duyệt</span> (phải bật thì sinh viên mới vào học được)</td></tr>
+      <tr><td><span class="ui">Nội dung</span></td><td>Cây bài giảng; thêm tài liệu, video, buổi trực tuyến, bài tập, bài kiểm tra; <b>chấm bài tập</b>; đặt Hệ số, điều kiện hoàn thành</td></tr>
+      <tr><td><span class="ui">Sinh viên</span></td><td>Thêm sinh viên, tìm, lọc; <span class="ui">Nhật ký học tập</span> của từng em</td></tr>
+      <tr><td><span class="ui">Nhóm sinh viên</span></td><td>Chia nhóm (giao bài theo nhóm)</td></tr>
+      <tr><td><span class="ui">Thảo luận</span></td><td>Diễn đàn, chủ đề thảo luận, chủ đề chấm điểm</td></tr>
+      <tr><td><span class="ui">Thông báo</span></td><td>Thông báo cho lớp</td></tr>
+      <tr><td><span class="ui">Điểm danh</span> · <span class="ui">Điểm offline</span></td><td>Điểm danh (Lần 1…5, nhập Excel, QRCode) · đầu điểm ngoài hệ thống (chuyên cần, thuyết trình…)</td></tr>
+      <tr><td><span class="ui">Chấm điểm</span></td><td>Chấm <b>bài kiểm tra / thi</b> có câu tự luận (không phải bài tập)</td></tr>
+      <tr><td><span class="ui">Báo cáo</span></td><td>Danh sách sinh viên, Kết quả nội dung học, Báo cáo thảo luận, Tổng hợp điểm; <span class="ui">Xuất báo cáo</span></td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="chuan-bi">
+  <h2><span class="n">02</span>Chuẩn bị lớp</h2>
+  <h3>Thêm sinh viên</h3>
+  <div class="callout note"><p><b>Các lớp mở ra có thể không có sẵn sinh viên.</b> Giảng viên tự thêm theo danh sách lớp chuẩn.</p></div>
+  <ol>
+    <li>Lấy danh sách chuẩn ở Cổng thông tin nhập điểm (nhapdiem.ussh.vnu.edu.vn): <span class="ui">In danh sách lớp học phần</span> → chọn lớp → <span class="ui">Xuất ra word</span>. Đây là danh sách ở đây luôn cập nhật.</li>
+    <li>Thêm từng em: tab <span class="ui">Sinh viên</span> → gõ mã sinh viên vào ô <span class="ui">Nhập tài khoản</span> → <span class="ui">+ Thêm sinh viên</span>.</li>
+    <li>Thêm từ file Excel: <span class="ui">+ Thêm mới</span> → <span class="ui">Thêm từ file excel</span> → bấm <span class="ui">Tại đây!</span> tải mẫu → điền cột <b>Tài khoản(*)/Username</b> (mã sinh viên) → <span class="ui">+ Chọn tệp</span> → <span class="ui">Nhập từ Excel</span>.</li>
+    <li>Kiểm tra lại xem dòng <b>Tổng số</b> ở tab Sinh viên có khớp danh sách lớp không.</li>
+  </ol>
+  <div class="figs"><figure><img src="anh/sv-1-them-moi.jpg" alt="Tab Sinh viên, menu Thêm mới" loading="lazy"><figcaption>① tab Sinh viên → ② + Thêm mới → ③ Thêm từ file excel; hoặc ④ gõ mã SV → ⑤ + Thêm sinh viên.</figcaption></figure><figure><img src="anh/sv-2-nhap-excel.jpg" alt="Hộp Nhập từ Excel" loading="lazy"><figcaption>Hộp NHẬP TỪ EXCEL: ① tải mẫu → điền mã SV → ② Chọn tệp → ③ Nhập từ Excel.</figcaption></figure></div>
+  <div class="callout warn"><p><strong>Các thầy cô lưu ý: tệp Word của cổng nhập điểm không tải thẳng lên được.</strong> Tệp <span class="ui">DanhSachLopHocPhan.doc</span> thực chất là trang web; đổi đuôi thành .xls cũng không up được. Các thầy cô cần chép mã sinh viên sang tệp Excel mẫu rồi mới thao tác.</p></div>
+  <h3>Cách chép bài giảng gốc&nbsp;<span class="tag ok">Từ lớp mới, chưa co bài giảng</span></h3>
+  <div class="path">Lớp MỚI → Nội dung → Sao chép nội dung từ lớp khác → Năm học, Học kỳ, Mã lớp học (lớp cũ) → Thực hiện</div>
+  <ul>
+    <li>Chỉ chép vào lớp <b>đang chưa có nội dung</b>. <br>(*) Lưu ý: nếu bấm <span class="ui">Thực hiện</span> hai lần trở lên, hoặc chép vào lớp đã có nội dung, thì mỗi thư mục bài giảng xuất hiện nhiều lần.</li>
+    <li>Ô Mã lớp học gõ đúng mã trên LMS.</li>
+  </ul>
+  <figure><img src="anh/lop-2-sao-chep.jpg" alt="Hộp Sao chép nội dung lớp học" loading="lazy"><figcaption>Nội dung → Sao chép nội dung từ lớp khác: ① năm học, ② học kỳ, ③ mã lớp CŨ → ④ Thực hiện (bấm một lần).</figcaption></figure>
+  <h3>Mở lớp cho sinh viên <span class="tag vid">video</span></h3>
+  <p>Tab <span class="ui">Thông tin</span>: kiểm tra <span class="ui">Ngày bắt đầu</span>, <span class="ui">Ngày kết thúc</span>, bật <span class="ui">Trạng thái Duyệt</span> → <span class="ui">Lưu lại</span>. Thời hạn của từng bài đặt riêng trong từng bài (mục 04).</p>
+  <figure><img src="anh/lop-1-thong-tin.jpg" alt="Tab Thông tin: ngày học, Trạng thái Duyệt" loading="lazy"><figcaption>Tab Thông tin: ② Ngày bắt đầu, kết thúc; ③ bật Trạng thái Duyệt → Lưu lại.</figcaption></figure>
+</section>
+
+<section id="noi-dung">
+  <h2><span class="n">03</span>Nội dung và buổi trực tuyến</h2>
+  <ul>
+    <li><b>Cây theo tuần:</b> <span class="ui">Tạo nhanh nhóm nội dung</span> → Tên nhóm “Tuần”, Số lượng 15 → <span class="ui">Xác nhận</span> tạo một lần Tuần 1 … Tuần 15. <span class="tag vid">video</span></li>
+    <li><b>Thêm tài liệu, video, link:</b> <span class="ui">+ Thêm mới</span> → chọn loại → chọn cấp cha (tuần nào), vị trí, tên → <span class="ui">+ Chọn tệp</span> → <span class="ui">Lưu lại</span>. <span class="tag vid">video</span></li>
+    <li><b>Công tắc Bắt buộc + Điều kiện hoàn thành(phút):</b> sinh viên phải mở mục đó trên LMS đủ số phút này thì mục mới được tích xanh. <br>Luu ý: Nếu thời gian đặt quá cao thì nhiều em “học rồi mà không xanh” (mục 08).</li>
+    <li><b>Buổi học trực tuyến:</b> <span class="ui">+ Thêm mới</span> → <span class="ui">Google Meet</span> / <span class="ui">MS Teams</span> / <span class="ui">Zoom</span> → <span class="ui">Đăng nhập</span>&nbsp;→ <span class="ui">Lưu lại</span>. Dán link Zoom vào mục loại <span class="ui">Liên kết</span> cũng được, sinh viên vẫn vào được.</li>
+  </ul>
+  <div class="figs"><figure><img src="anh/nd-2-tao-nhanh-tuan.jpg" alt="Hộp Tạo nhanh nhóm nội dung" loading="lazy"><figcaption>Tạo nhanh nhóm nội dung: ① Tên nhóm (Tuần), ② Số lượng (15) → ③ Xác nhận.</figcaption></figure><figure><img src="anh/nd-1-chon-loai.jpg" alt="Hộp Chọn loại nội dung" loading="lazy"><figcaption>+ Thêm mới → Chọn loại nội dung: ① tài liệu, video, link; ② buổi trực tuyến; ③ bài tập, bài kiểm tra.</figcaption></figure></div>
+  <div class="callout note"><p><b>Cần kiểm tra lại mục trống.</b> <br>3 mục “Tài liệu buổi livestream” loại Văn bản bật Bắt buộc nhưng chưa có nội dung, sinh viên mở ra chỉ thấy trang trắng. Để tránh trường hợp này, các Thầy, Cô nên dùng chức năng&nbsp;<span class="ui">ⓘ</span> → <span class="ui">Xem trước</span> để xem mục như sinh viên thấy.</p></div>
+</section>
+
+<section id="bai-tap">
+  <h2><span class="n">04</span>Bài tập và bài kiểm tra</h2>
+  <h3>Bài tập (sinh viên nộp tệp) <span class="tag vid">video</span></h3>
+  <ol>
+    <li><span class="ui">+ Thêm mới</span> → <span class="ui">Bài tập</span> → nhóm nội dung, vị trí, <span class="ui">Tên bài tập</span>, <span class="ui">Mô tả yêu cầu</span> hoặc <span class="ui">+Thêm tệp đính kèm</span>.</li>
+    <li>Đặt <span class="ui">Bài tập bắt buộc</span>, <span class="ui">Hệ số</span>, <span class="ui">Loại đầu điểm</span> (vd Đánh giá giữa kỳ), <span class="ui">Thời hạn nộp bài</span> (Từ ngày – Đến ngày), định dạng tệp, số tệp tối đa → <span class="ui">Lưu lại</span>.</li>
+  </ol>
+  <figure><img src="anh/bt-1-cai-dat.jpg" alt="Cài đặt bài tập: bắt buộc, điểm đạt, trọng số, loại đầu điểm, hạn nộp" loading="lazy"><figcaption>Cuối màn sửa bài tập: ① Bài tập bắt buộc, ② Điểm đạt, ③ Trọng số (ô hệ số của bài tập), ④ Loại đầu điểm, ⑤ hạn nộp → ⑥ Lưu lại. Không bấm Xóa.</figcaption></figure>
+  <h3>Bài kiểm tra / thi <span class="tag vid">video</span></h3>
+  <ol>
+    <li><span class="ui">+ Thêm mới</span> → <span class="ui">Bài kiểm tra / thi</span> → tab <span class="ui">Thông tin</span>: thang điểm, <span class="ui">Điều kiện hoàn thành (điểm)</span>, thời gian làm bài, số lần làm, <span class="ui">Lấy kết quả</span>, mật khẩu, <span class="ui">Thời gian từ … Đến</span>, <span class="ui">Hệ số</span>, <span class="ui">Loại đầu điểm</span>.</li>
+    <li>Tab <span class="ui">Câu hỏi</span> (gõ trực tiếp hoặc nhập Excel; 7 loại câu) → tab <span class="ui">Cấu trúc</span> (điểm mỗi câu, số lượng lấy).</li>
+    <li>Quay lại tab Thông tin, đổi <span class="ui">Trạng thái</span> sang <b>Kích hoạt</b> → <span class="ui">Cập nhật</span>.</li>
+  </ol>
+  <figure><img src="anh/diem-1-he-so.jpg" alt="Màn sửa bài kiểm tra: Hệ số, Loại đầu điểm, Cập nhật" loading="lazy"><figcaption>Màn sửa bài kiểm tra: ① Hệ số, ② Loại đầu điểm → ③ Cập nhật. Trạng thái phải là Kích hoạt.</figcaption></figure>
+  <div class="callout warn"><p><strong>Chế độ “Soạn thảo”&nbsp; bật thì sinh viên sẽ không làm được.</strong> <br>Sinh viên hết giờ thì hệ thống tự thu bài.</p></div>
+  <p class="src"><b>Dùng lại đề thicho nhiều lớp:</b> menu ≡ → <span class="ui">Dữ liệu cá nhân</span> → <span class="ui">Thi - Kiểm tra</span> (ngân hàng câu hỏi, đề thi); đưa vào lớp bằng công tắc <span class="ui">Sử dụng nguồn có sẵn</span>.</p>
+</section>
+
+<section id="thao-luan">
+  <h2><span class="n">05</span>Thảo luận <span class="tag ok"><br></span></h2>
+  <ul>
+    <li>Tab <span class="ui">Thảo luận</span> có sẵn box&nbsp;<b>Thảo luận chung</b> (chủ đề “Hỏi đáp, hỗ trợ”) và box&nbsp;<b>Nội dung học</b> (mỗi bài giảng là một chủ đề).</li>
+    <li>Tạo chủ đề: <span class="ui">Thêm mới chủ để</span>&nbsp;→ Tiêu đề, Mô tả → <span class="ui">Lưu lại</span>. <br>Chủ đề có điểm: <span class="ui">Chủ để chấm điểm</span> → thang điểm, cách tính, loại đầu điểm, trọng số.</li>
+    <li>Đăng câu hỏi cho sinh viên: bấm tên chủ đề → <span class="ui">Thêm thảo luận</span>.</li>
+    <li>Lấy số liệu: tab <span class="ui">Báo cáo</span> → <span class="ui">Báo cáo thảo luận</span> → <span class="ui">Xuất báo cáo</span> (số bài tạo, phản hồi, đã chấm, điểm thảo luận của từng sinh viên).</li>
+  </ul>
+  <div class="figs">
+    <figure><img src="anh/thao-luan-1-chu-de.jpg" alt="Tab Thảo luận, các nút Thêm mới chủ đề và Chủ đề chấm điểm" loading="lazy"><figcaption>Tab Thảo luận: tạo chủ đề, bật hiển thị, chủ đề chấm điểm.</figcaption></figure><figure><img src="anh/thao-luan-2-dang-bai.jpg" alt="Trang chủ đề: Thêm thảo luận" loading="lazy"><figcaption>Bấm tên chủ đề → Thêm thảo luận để đăng câu hỏi; đầu trang có số thảo luận, phản hồi, sinh viên tham gia.</figcaption></figure>
+    <figure><img src="anh/thao-luan-3-bao-cao.jpg" alt="Báo cáo thảo luận trong tab Báo cáo" loading="lazy"><figcaption>Báo cáo → Báo cáo thảo luận → Xuất báo cáo.</figcaption></figure>
+  </div>
+</section>
+
+<section id="cham">
+  <h2><span class="n">06</span>Chấm bài và công bố điểm <span class="tag ok">đã kiểm tra</span></h2>
+  <div class="callout warn"><p><strong>Bài tập không chấm ở tab Chấm điểm.</strong> <br><b>Tab <span class="ui">Chấm điểm</span> chỉ có bài kiểm tra / thi. </b><br>Để chấm bài sinh viên nộp (vd Bài tập giữa kỳ), làm theo hướng dẫn dưới đây:</p></div>
+  <div class="path"><b>Nội dung → ⓘ ở dòng bài tập → Chỉnh sửa → Danh sách sinh viên</b></div>
+  <figure><img src="anh/cham-1-mo-bai-tap.jpg" alt="Nút ⓘ ở dòng Bài tập giữa kỳ, mục Chỉnh sửa" loading="lazy"><figcaption>① dòng bài tập → ② nút ⓘ → ③ Chỉnh sửa (không bấm Xóa ngay bên dưới).</figcaption></figure>
+  <ol>
+    <li>Ô <span class="ui">Trạng thái</span> chọn <b>Đã nộp bài - GV chưa chấm</b> để chỉ còn bài cần chấm (bảng mặc định liệt kê cả lớp, 20 em một trang).</li>
+    <li>Gõ điểm vào ô <span class="ui">Điểm</span>, hoặc <span class="ui">Thao tác</span> → <span class="ui">Chi tiết bài làm</span> để xem bài, nhận xét → <span class="ui">Lưu điểm</span>.</li>
+    <li>Tải nhiều bài một lần: tích chọn → <span class="ui">Tải tệp đính kèm</span>.</li>
+    <li>Chấm xong, bật <span class="ui">Hiển thị điểm cho sinh viên</span>. Chưa bật thì sinh viên không thấy điểm.</li>
+  </ol>
+  <h3>Nhập điểm hàng loạt bằng Excel</h3>
+  <ol>
+    <li><b>Cần tắt chức năng</b>&nbsp;<span class="ui">Hiển thị điểm cho sinh viên</span>. <br>Nếu chức năng này đang bật, hệ thống sẽ báo “Không thể nhập điểm khi đang bật hiển thị điểm cho sinh viên”.</li>
+    <li><span class="ui">Nhập điểm chấm excel</span> → tải mẫu <span class="ui">DanhSachSinhVienBaiTap.xlsx</span> → điền điểm khớp theo tài khoản (mã sinh viên) → tải lên → xem tệp lỗi nếu có.</li>
+    <li>Bật lại hiển thị điểm.</li>
+  </ol>
+  <div class="figs">
+    <figure><img src="anh/cham-2-loc-bai-nop.jpg" alt="Danh sách sinh viên của bài tập, lọc Đã nộp bài - GV chưa chấm" loading="lazy"><figcaption>Lọc bài cần chấm; chức năng hiển thị điểm.</figcaption></figure>
+    <figure><img src="anh/cham-3-go-diem.jpg" alt="Menu Thao tác: Chi tiết bài làm, Lưu điểm" loading="lazy"><figcaption>Thao tác → Chi tiết bài làm, Lưu điểm. Không bấm “Xóa - Thêm lượt nộp”.</figcaption></figure>
+  </div>
+</section>
+
+<section id="diem">
+  <h2><span class="n">07</span>Hệ số, loại đầu điểm, tổng hợp điểm</h2>
+  <h3>“Điểm tổng kết” sinh viên thấy được tính thế nào&nbsp;</h3>
+  <ul>
+    <li>Trang lớp của sinh viên có ba ô độc lập: <b>Hoàn thành …%</b> (tiến độ xem, làm nội dung; không phải điểm), <b>Thời gian học / Yêu cầu</b>, và <b>Điểm tổng kết</b>.</li>
+    <li>Điểm tổng kết <b>chỉ lấy từ các mục có Hệ số</b>. Ví dụ một lớp chỉ đặt hệ số cho Bài tập giữa kỳ: điểm tổng kết bằng đúng điểm giữa kỳ, bài trắc nghiệm không được tính, bài chưa chấm là 0. Vì vậy có em học 22% mà điểm cao hơn em học 84%.</li>
+    <li>Điểm trên LMS chưa phải điểm học phần. Điểm học phần giảng viên tính theo đề cương rồi nhập ở cổng nhập điểm.</li>
+  </ul>
+  <h3>Đặt tỷ lệ các đầu điểm&nbsp;</h3>
+  <ol>
+    <li>Từng bài cần tính điểm: <span class="ui">Nội dung</span> → <span class="ui">ⓘ</span> → <span class="ui">Chỉnh sửa</span> → nhập <span class="ui">Hệ số</span>, chọn <span class="ui">Loại đầu điểm</span> (Đánh giá thường xuyên / giữa kỳ / cuối kỳ / bổ sung) → <span class="ui">Cập nhật</span>.</li>
+    <li><span class="ui">Báo cáo</span> → <span class="ui">Tổng hợp điểm</span> → mục <b>II. Thiết lập báo cáo loại đầu điểm</b>: bảng bên phải liệt kê các loại đầu điểm, bấm nút sửa ở từng dòng nhập <span class="ui">Hệ số (%)</span> theo đề cương → <span class="ui">Lưu lại thiết lập</span> → <span class="ui">Xuất báo cáo</span>.</li>
+  </ol>
+  <div class="callout note"><p><span class="tag chua">lưu ý</span>&nbsp; Sau khi lưu xong, các Thầy, Cô nên xuất báo cáo và đối chiếu vài sinh viên trước khi dùng.</p></div>
+  <div class="figs">
+    <figure><img src="anh/diem-1-he-so.jpg" alt="Màn sửa bài kiểm tra với ô Hệ số và Loại đầu điểm" loading="lazy"><figcaption>Bước 1: Hệ số, Loại đầu điểm của từng bài.</figcaption></figure>
+    <figure><img src="anh/diem-2-tong-hop.jpg" alt="Báo cáo Tổng hợp điểm, mục II, cột Hệ số phần trăm" loading="lazy"><figcaption>Bước 2: Hệ số (%) cho từng loại đầu điểm.</figcaption></figure>
+  </div>
+  <p class="src">Điểm ngoài hệ thống (chuyên cần, thuyết trình): tab <span class="ui">Điểm offline</span> → <span class="ui">+ Thêm mới</span> → Mã điểm, Tên, Hệ số, Loại đầu điểm → nhập từng em hoặc Excel. Tab Điểm danh chỉ ghi Lần 1…5, không tự thành điểm.</p>
+</section>
+
+<section id="tien-do">
+  <h2><span class="n">08</span>Theo dõi tiến độ của sinh viên <span class="tag ok">đã kiểm tra</span></h2>
+  <div class="path">Sinh viên → gõ mã vào ô tìm kiếm → ⓘ ở dòng sinh viên → Nhật ký học tập</div>
+  <ul>
+    <li>Bảng <b>KẾT QUẢ HỌC TẬP</b> liệt kê từng mục: Điều kiện hoàn thành, Bắt buộc, Điểm số / hệ số, Tổng thời gian truy cập (phút), Tổng lượt truy cập, Trạng thái hoàn thành.</li>
+    <li>Mục được tích xanh khi <b>thời gian LMS ghi nhận ≥ Điều kiện hoàn thành</b> (bài trắc nghiệm: đạt số điểm điều kiện).</li>
+    <li>Vấn đề thường gặp: sinh viên mở một tài liệu nhiều lượt nhưng LMS chỉ ghi được 1–2 phút. <br>Có thể do tải tệp về máy đọc hoặc mở rồi chuyển sang trang khác. <br>Cách xử lý: mở lại mục ngay trên LMS và học đủ số phút.</li>
+    <li>Mục đã đủ thời gian mà vẫn “Chưa hoàn thành” mới là lỗi hệ thống, báo nhóm Hỗ trợ LMS.</li>
+    <li>Cả lớp: <span class="ui">Báo cáo</span> → <span class="ui">Danh sách sinh viên</span> (lọc, sắp xếp theo thời lượng, % hoàn thành) hoặc <span class="ui">Kết quả nội dung học</span> → xuất báo cáo chi tiết.</li>
+  </ul>
+  <div class="figs">
+    <figure><img src="anh/tien-do-1-nhat-ky.jpg" alt="Menu ⓘ của sinh viên, mục Nhật ký học tập" loading="lazy"><figcaption>Mở Nhật ký học tập. Hai mục “Xóa” cuối menu: không bấm.</figcaption></figure>
+    <figure><img src="anh/tien-do-2-ket-qua.jpg" alt="Bảng kết quả học tập, so thời gian với điều kiện hoàn thành" loading="lazy"><figcaption>So “Tổng thời gian truy cập” với “Điều kiện hoàn thành”.</figcaption></figure>
+  </div>
+</section>
+
+<section id="su-co">
+  <h2><span class="n">09</span>Sự cố thường gặp</h2>
+  <p>Các trường hợp dưới đây đều đã xảy ra ở lớp của thầy cô trong học kỳ này.</p>
+
+  <div class="issue"><h3>Lớp 0 sinh viên dù danh sách khoa có gần 100 em</h3><dl>
+    <dt>Nguyên nhân</dt><dd>Từ HK1 2026-2027 lớp không còn được nạp sẵn danh sách như các kỳ trước.</dd>
+    <dt>Xử lý</dt><dd>Thêm bằng Excel theo <a href="#chuan-bi">mục 02</a>.</dd></dl></div>
+
+  <div class="issue"><h3>Sĩ số trên LMS lệch danh sách lớp (vd 200 và 199)</h3><dl>
+    <dt>Nguyên nhân</dt><dd>Thường là sinh viên học lại (mã khoá cũ), đổi lớp, hoặc thêm nhầm.</dd>
+    <dt>Xử lý</dt><dd>Đối chiếu theo mã sinh viên với danh sách “Xuất ra word”.&nbsp;<br>Để xóa sinh viên khỏi lớp: liên hệ Tổ hỗ trợ Phòng Đào tạo.</dd></dl></div>
+
+  <div class="issue"><h3>Nội dung bài giảng xuất hiện nhiều lần</h3><dl>
+    <dt>Nguyên nhân</dt><dd>Bấm <span class="ui">Thực hiện</span> nhiều lần khi sao chép, hoặc chép vào lớp đã có nội dung.</dd>
+    <dt>Xử lý</dt><dd>Xoá bản thừa từ thư mục nhỏ nhất ra thư mục ngoài, chỉ khi lớp chưa bắt đầu học.&nbsp;<br>Phải xóa toàn bộ các thư mục, xóa từ cấp thông tin bé nhất rồi mới xóa được thư mục.</dd></dl></div>
+
+  <div class="issue"><h3>Không thấy bài sinh viên đã nộp</h3><dl>
+    <dt>Nguyên nhân</dt><dd>Tìm ở tab Chấm điểm; bài dạng Bài tập không hiện ở đó.</dd>
+    <dt>Xử lý</dt><dd>Nội dung → ⓘ → Chỉnh sửa → Danh sách sinh viên (<a href="#cham">mục 06</a>).</dd></dl></div>
+
+  <div class="issue"><h3>Nhập điểm Excel báo lỗi</h3><dl>
+    <dt>Nguyên nhân</dt><dd>Đang bật “Hiển thị điểm cho sinh viên”, hoặc tệp không đúng mẫu tải từ chính bài đó.</dd>
+    <dt>Xử lý</dt><dd>Tắt hiển thị điểm, dùng đúng mẫu, khớp theo tài khoản; nhập xong bật lại.</dd></dl></div>
+
+  <div class="issue"><h3>Sinh viên thắc mắc điểm tổng kết không khớp % hoàn thành</h3><dl>
+    <dt>Nguyên nhân</dt><dd>Điểm tổng kết chỉ lấy các mục có Hệ số; % hoàn thành là tiến độ.</dd>
+    <dt>Xử lý</dt><dd>Giải thích cho sinh viên; nếu muốn tính trắc nghiệm, thảo luận, chuyên cần thì đặt Hệ số (<a href="#diem">mục 07</a>).</dd></dl></div>
+
+  <div class="issue"><h3>Sinh viên học đủ mà không được tích xanh</h3><dl>
+    <dt>Nguyên nhân</dt><dd>Thời gian học của sinh viên chưa được LMS ghi nhận đủ điều kiện hoàn thành.</dd>
+    <dt>Xử lý</dt><dd>Xem Nhật ký học tập (<a href="#tien-do">mục 08</a>); xem lại số phút điều kiện có hợp lý không.</dd></dl></div>
+
+  <div class="issue"><h3>Màn hình hiện chữ lạ (vd cột “phụ tùng xe hơi”, “thái” thay cho “Trạng thái”)</h3><dl>
+    <dt>Nguyên nhân</dt><dd><span class="tag chua">chưa chắc</span> Có thể do chức năng autotranslate của trình duyệt.</dd>
+    <dt>Xử lý</dt><dd>Tắt tự dịch cho trang lms-admin.vnu.edu.vn rồi tải lại trang. Vẫn lỗi thì chụp màn hình gửi nhóm hỗ trợ.</dd></dl></div>
+
+  <div class="issue"><h3>Sinh viên không thấy lớp, không vào được</h3><dl>
+    <dt>Nguyên nhân</dt><dd>Chưa được thêm vào lớp, hoặc lớp chưa bật <span class="ui">Trạng thái Duyệt</span> / hiển thị cho sinh viên.</dd>
+    <dt>Xử lý</dt><dd>Kiểm tra tab Sinh viên (em đó có trong lớp, “Đã duyệt” chưa) và tab Thông tin.</dd></dl></div>
+</section>
+
+<section id="hoi-dap" class="qa">
+  <h2><span class="n">10</span>Hỏi đáp</h2>
+
+  <h3>Thiết lập lớp</h3>
+  <details><summary>Lớp cùng học phần mà lớp 9 tuần, lớp 10 tuần?</summary><div>
+    <p>Số tuần do lúc đăng ký lớp trên LMS chọn. <span class="tag chua">chưa chắc</span> Chưa có xác nhận chính thức về cách các môn chung được đăng ký, đề nghị liên lạc tổ Hỗ trợ.</p></div></details>
+  <details><summary>Đặt hạn sinh viên phải học xong ở đâu?</summary><div>
+    <p>Cả lớp: tab Thông tin → Ngày bắt đầu, Ngày kết thúc. Từng bài tập: Thời hạn nộp bài. Từng bài kiểm tra: Thời gian từ … Đến. Mốc chung của trường hỏi Tổ hỗ trợ Phòng Đào tạo.</p></div></details>
+  <details><summary>Muốn một tài liệu chỉ một nhóm sinh viên xem?</summary><div>
+    <p>Tạo nhóm ở tab Nhóm sinh viên, rồi trong tài liệu chọn <span class="ui">Chọn nhóm sinh viên</span>.</p></div></details>
+  <details><summary>Có nhúng được Google Form, YouTube vào bài không?</summary><div>
+    <p>Có. Thêm mục loại <span class="ui">Văn bản</span>, trong trình soạn thảo dùng nút <span class="ui">IFrame</span> và dán link vào ô URL.</p></div></details>
+
+  <h3>Bài tập, kiểm tra</h3>
+  <details><summary>Sinh viên nộp nhầm bài, muốn nộp lại?</summary><div>
+    <p>Nộp rồi sinh viên không tự sửa được. Trong danh sách bài nộp có mục <span class="ui">Xóa - Thêm lượt nộp</span>: mục này <b>xoá bài đã nộp</b> để em nộp lại, nên chỉ dùng khi chắc chắn và đã tải bài cũ về.</p></div></details>
+  <details><summary>Sinh viên không vào được bài kiểm tra?</summary><div>
+    <p>Kiểm tra: bài đã <b>Kích hoạt</b> chưa, đang trong khoảng “Thời gian từ … Đến” chưa, có mật khẩu không, số lần làm đã hết chưa.</p></div></details>
+  <details><summary>Sinh viên xem lại bài kiểm tra được không?</summary><div>
+    <p>Tuỳ cấu hình <span class="ui">Thiết lập hiển thị kết quả</span> trong bài kiểm tra.</p></div></details>
+  <details><summary>Bài trắc nghiệm có tự chấm không?</summary><div>
+    <p>Có. Câu tự luận trong bài kiểm tra / thi thì chấm ở tab <span class="ui">Chấm điểm</span>.</p></div></details>
+
+  <h3>Điểm và tiến độ</h3>
+  <details><summary>Vì sao sinh viên chưa thấy điểm tôi đã chấm?</summary><div>
+    <p>Chưa bật <span class="ui">Hiển thị điểm cho sinh viên</span> trong danh sách bài nộp của bài đó.</p></div></details>
+  <details><summary>Điểm trên LMS có phải điểm học phần không?</summary><div>
+    <p>Không. Điểm học phần chính thức vẫn nhập ở cổng nhập điểm của trường.</p></div></details>
+  <details><summary>Lấy danh sách sinh viên chưa học để nhắc?</summary><div>
+    <p>Tab Sinh viên → lọc <span class="ui">-- Chọn trạng thái học --</span> (Chưa học, Đang học…), hoặc Báo cáo → Danh sách sinh viên → sắp xếp theo thời lượng học, % hoàn thành.</p></div></details>
+
+  <h3>Tài khoản</h3>
+  <details><summary>Quên mật khẩu, không vào được email VNU?</summary><div>
+    <p>LMS dùng chung mật khẩu với email VNU. Giảng viên liên hệ Phòng Quản trị nguồn lực để được cấp lại. Thông tin cá nhân (CCCD, mật khẩu) chỉ gửi riêng cho người phụ trách, không gửi vào nhóm.</p></div></details>
+</section>
+
+<section id="can-than">
+  <h2><span class="n">11</span>Nút cần cẩn thận</h2>
+  <div class="tbl"><table>
+    <thead><tr><th>Nút</th><th>Ở đâu</th><th>Vì sao</th></tr></thead>
+    <tbody>
+      <tr><td><span class="ui">Thực hiện</span> (sao chép)</td><td>Nội dung → Sao chép nội dung từ lớp khác</td><td>Bấm lần hai là nhân đôi toàn bộ nội dung</td></tr>
+      <tr><td><span class="ui">Xóa - Thêm lượt nộp</span></td><td>Danh sách bài nộp → Thao tác</td><td>Xoá bài sinh viên đã nộp</td></tr>
+      <tr><td><span class="ui">Xóa nhật ký</span> · <span class="ui">Xóa khỏi lớp</span></td><td>Sinh viên → ⓘ</td><td>Mất lịch sử học, mất sinh viên khỏi lớp</td></tr>
+      <tr><td><span class="ui">Hoàn thành lớp học</span> · <span class="ui">Chưa hoàn thành</span></td><td>Sinh viên → ⓘ</td><td>Đổi trạng thái học của em đó bằng tay</td></tr>
+      <tr><td>Mọi nút <span class="ui">Xóa</span>, thùng rác</td><td>Nội dung, đầu điểm, thông tin lớp</td><td>Không khôi phục được</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="ho-tro">
+  <h2><span class="n">12</span>Cần hỗ trợ</h2>
+  <ul>
+    <li><b>Nhóm Zalo “Hỗ trợ LMS”: </b>Zalo HaiDv LMS/nhóm Zalo</li>
+    <li><b>Tổ hỗ trợ phòng Đào tạo</b>&nbsp;(thêm lớp, thêm giảng viên, xoá sinh viên, xoá dữ liệu): Tổ hỗ trợ Phòng Đào tạo, cô Ngân, cô Hương, thầy Tâm, cô Lan Anh.</li>
+    <li>Không gửi mật khẩu, số CCCD, thông tin cá nhân vào nhóm.</li>
+  </ul>
+</section>
+
+</main>
+<footer>Biên soạn từ video hướng dẫn sử dụng LMS VNU và các lần kiểm tra trực tiếp lớp HK1 2026-2027 (chỉ xem, không thay đổi lớp). Ảnh minh hoạ đã che họ tên, mã sinh viên.</footer>
+</div>
+
+<dialog id="phong-to" aria-label="Ảnh phóng to"><img alt=""><p></p></dialog>
+<button type="button" id="len-dau" hidden>↑ Lên đầu trang</button>
+<script src="app.js"></script>
+</body>
+</html>
