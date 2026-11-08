@@ -1,5 +1,5 @@
 // Lưu sổ tay để mở được khi không có mạng. Đổi PHIEN_BAN mỗi lần cập nhật nội dung.
-const PHIEN_BAN = "so-tay-lms-2026-11-03";
+const PHIEN_BAN = "so-tay-lms-2026-11-08";
 const TEP = ["./", "index.html", "app.js", "manifest.webmanifest", "icon.svg",
   "anh/lop-1-thong-tin.jpg", "anh/sv-1-them-moi.jpg", "anh/sv-2-nhap-excel.jpg", "anh/lop-2-sao-chep.jpg",
   "anh/nd-1-chon-loai.jpg", "anh/nd-2-tao-nhanh-tuan.jpg", "anh/bt-1-cai-dat.jpg", "anh/diem-1-he-so.jpg",

@@ -132,7 +132,7 @@ dialog#phong-to p{color:#e7ecf6;font-size:14px;text-align:center;margin:10px 0 0
   <span class="eyebrow">Haidv lms</span>
   <h1>Sổ tay LMS</h1>
   <p class="lead">Sổ tay này giúp các Thầy, Cô thao tác thuận tiện hơi với giao diện của hệ thống LMS VNU</p>
-  <div class="meta"><span>Cập nhật 3/11/2026</span><span><span class="tag ok">đã kiểm tra trên lớp thật</span> <span class="tag vid">theo video hướng dẫn</span> <span class="tag chua">chưa chắc</span></span></div>
+  <div class="meta"><span>Cập nhật 8/11/2026</span><span><span class="tag ok">đã kiểm tra trên lớp thật</span> <span class="tag vid">theo video hướng dẫn</span> <span class="tag chua">chưa chắc</span></span></div>
   <div class="tim" role="search">
     <label for="tim" class="tim-nhan">Tìm trong sổ tay</label>
     <div class="tim-o"><input id="tim" type="search" placeholder="Gõ từ cần tìm, vd: nhập điểm, excel, thảo luận (phím /)" autocomplete="off" spellcheck="false">
@@ -360,6 +360,14 @@ dialog#phong-to p{color:#e7ecf6;font-size:14px;text-align:center;margin:10px 0 0
     <dt>Nguyên nhân</dt><dd>Thời gian học của sinh viên chưa được LMS ghi nhận đủ điều kiện hoàn thành.</dd>
     <dt>Xử lý</dt><dd>Xem Nhật ký học tập (<a href="#tien-do">mục 08</a>); xem lại số phút điều kiện có hợp lý không.</dd></dl></div>
 
+  <div class="issue"><h3>Sinh viên làm hết mà báo cáo vẫn “chưa hoàn thành”</h3><dl>
+    <dt>Nguyên nhân</dt><dd>Còn mục bắt buộc chưa đạt, hoặc lớp có hai mục bắt buộc trùng nhau (vd 2 mục “Bài tập giữa kỳ”): em đó nộp một mục nên <span class="ui">% Hoàn thành bài tập</span> chỉ đạt 1/2.</dd>
+    <dt>Xử lý</dt><dd>Xem Nhật ký học tập (<a href="#tien-do">mục 08</a>) để biết mục bắt buộc nào còn thiếu. Mục bị trùng thì tắt <span class="ui">Bài tập bắt buộc</span> ở mục thừa; nếu là hai bài khác nhau thì đổi tên cho dễ phân biệt. Số % sinh viên chụp gửi có thể đã cũ, nên tra lại ở <span class="ui">Báo cáo</span> → <span class="ui">Danh sách sinh viên</span>.</dd></dl></div>
+
+  <div class="issue"><h3>Video bài giảng hiện khung trắng</h3><dl>
+    <dt>Nguyên nhân</dt><dd><span class="tag chua">chưa chắc</span> Có thể do trình duyệt, nhất là trên điện thoại. Video của một số lớp là gói SCORM, chạy trong khung riêng của LMS. Ở lớp đã kiểm tra, các sinh viên khác vẫn xem được nên không phải video hỏng đồng loạt.</dd>
+    <dt>Xử lý</dt><dd>Nhờ sinh viên mở lms.vnu.edu.vn bằng Chrome, tốt nhất trên máy tính, rồi xem lại. Nhật ký học tập (<a href="#tien-do">mục 08</a>) cho biết video nào còn thiếu thời gian. Nút <span class="ui">Xem trước</span> của giảng viên có thể hiện trắng với loại video này, nên không dựa vào nút đó để kết luận video lỗi. Vẫn trắng thì chụp màn hình gửi nhóm hỗ trợ.</dd></dl></div>
+
   <div class="issue"><h3>Màn hình hiện chữ lạ (vd cột “phụ tùng xe hơi”, “thái” thay cho “Trạng thái”)</h3><dl>
     <dt>Nguyên nhân</dt><dd><span class="tag chua">chưa chắc</span> Có thể do chức năng autotranslate của trình duyệt.</dd>
     <dt>Xử lý</dt><dd>Tắt tự dịch cho trang lms-admin.vnu.edu.vn rồi tải lại trang. Vẫn lỗi thì chụp màn hình gửi nhóm hỗ trợ.</dd></dl></div>
@@ -391,6 +399,8 @@ dialog#phong-to p{color:#e7ecf6;font-size:14px;text-align:center;margin:10px 0 0
     <p>Tuỳ cấu hình <span class="ui">Thiết lập hiển thị kết quả</span> trong bài kiểm tra.</p></div></details>
   <details><summary>Bài trắc nghiệm có tự chấm không?</summary><div>
     <p>Có. Câu tự luận trong bài kiểm tra / thi thì chấm ở tab <span class="ui">Chấm điểm</span>.</p></div></details>
+  <details><summary>Bài tập không thấy ô Hệ số, Điều kiện hoàn thành?</summary><div>
+    <p>Ở màn sửa Bài tập, hai ô này mang tên khác: <span class="ui">Trọng số</span> là hệ số, <span class="ui">Điểm đạt</span> là số điểm cần đạt để hoàn thành. Bài kiểm tra / thi thì ghi <span class="ui">Hệ số</span> và <span class="ui">Điều kiện hoàn thành (điểm)</span>.</p></div></details>
 
   <h3>Điểm và tiến độ</h3>
   <details><summary>Vì sao sinh viên chưa thấy điểm tôi đã chấm?</summary><div>
@@ -399,6 +409,8 @@ dialog#phong-to p{color:#e7ecf6;font-size:14px;text-align:center;margin:10px 0 0
     <p>Không. Điểm học phần chính thức vẫn nhập ở cổng nhập điểm của trường.</p></div></details>
   <details><summary>Lấy danh sách sinh viên chưa học để nhắc?</summary><div>
     <p>Tab Sinh viên → lọc <span class="ui">-- Chọn trạng thái học --</span> (Chưa học, Đang học…), hoặc Báo cáo → Danh sách sinh viên → sắp xếp theo thời lượng học, % hoàn thành.</p></div></details>
+  <details><summary>Mục I và mục II ở Tổng hợp điểm khác nhau thế nào?</summary><div>
+    <p>Mục I liệt kê từng bài, cột <span class="ui">Trọng số</span> chính là Hệ số đã đặt ở bài đó, bảng bên phải đặt <span class="ui">Hệ số (%)</span> theo loại nội dung. Mục II chỉ liệt kê bài đã chọn <span class="ui">Loại đầu điểm</span>, bảng bên phải đặt <span class="ui">Hệ số (%)</span> theo từng loại đầu điểm. <span class="tag chua">chưa chắc</span> Chưa kiểm được công thức của bản xuất và việc tổng có phải bằng 100% không, nên xuất thử và đối chiếu vài sinh viên.</p></div></details>
 
   <h3>Tài khoản</h3>
   <details><summary>Quên mật khẩu, không vào được email VNU?</summary><div>
